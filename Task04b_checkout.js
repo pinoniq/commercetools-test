@@ -1,8 +1,8 @@
 const checkout = require("./handson/order");
 const { log } = require("./logger.js");
 
-const customerKey = "";
-const cartId = "";
+const customerKey = "jm-customer";
+const cartId = "2b3189ca-6989-4cae-9a05-eff7745cc6b1";
 const orderId = "";
 
 const paymentDraft = {
@@ -14,12 +14,12 @@ const paymentDraft = {
 }
 
 // create a cart and update the catId variable
- checkout.createCart(customerKey).then(log).catch(log);
+// checkout.createCart(customerKey).then(log).catch(log);
 
 // checkout.addLineItemsToCart(cartId,['tulip-seed-box','tulip-seed-sack']).then(log).catch(log);
 
-// checkout.addDiscountCodeToCart(cartId, "SUMMER").then(log).catch(log);
-// checkout.getCartById(cartId).then(log).catch(log);
+// checkout.addDiscountCodeToCart(cartId, "SUMMER22").then(log).catch(log);
+checkout.getCartById(cartId).then(log).catch(log);
 
 // create order from cart and update the orderId
 // checkout.createOrderFromCart(cartId).then(log).catch(log);

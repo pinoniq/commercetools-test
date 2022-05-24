@@ -7,10 +7,10 @@ const {
     } = require("./handson/importService");
 const { log } = require("./logger.js");
 
-const containerKey = "ff-ImportContainer";
+const containerKey = "jm-ImportContainer";
 
 // Create an import container
-createImportContainer(containerKey).then(log).catch(log);
+// createImportContainer(containerKey).then(log).catch(log);
 
 // import products
 // importProducts(containerKey).then(log).catch(log);
@@ -19,15 +19,15 @@ createImportContainer(containerKey).then(log).catch(log);
 // checkImportSummary(containerKey).then(log).catch(log);
 
 // check import operations for your container
-// checkImportOperations(containerKey).then(operations =>
-//    operations.body.results.forEach(operation =>
-//        log(operation.id + " : " +operation.state)
-//    )
-// )
+/* checkImportOperations(containerKey).then(operations =>
+   operations.body.results.forEach(operation =>
+       log(operation.id + " : " +operation.state)
+   )
+)//*/
 
 // Check the status of import operations by their Ids
-//  checkImportOperationById("2e325e01-1193-4d8a-92c9-af29da1cc0fb").then(log).catch(log);
-//  checkImportOperationById("cd61acae-301d-4984-8dc2-2deb0ba5035c").then(log).catch(log);
+checkImportOperationById("aa36faaa-f47b-4e39-b509-030500ad8092").then(log).catch(log);
+//checkImportOperationById("ea97f27f-4e71-4851-957e-126490f6bc0a").then(log).catch(log);
 
 
 
