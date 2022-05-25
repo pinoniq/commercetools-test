@@ -10,7 +10,7 @@ module.exports.createCart = (customerKey) => getCustomerByKey(customerKey).then(
 }).execute())
 
 module.exports.createAnonymousCart = () =>
-  apiRoot.withProjectKey({ projectKey })
+  apiRoot
     .carts()
     .post({
       body: {
