@@ -1,17 +1,17 @@
-const checkout = require("./handson/order");
-const { log } = require("./logger.js");
+const checkout = require('./handson/order');
+const {log} = require('./logger.js');
 
-const customerKey = "jm-customer";
-const cartId = "2b3189ca-6989-4cae-9a05-eff7745cc6b1";
-const orderId = "";
+const customerKey = 'jm-customer';
+const cartId = '2b3189ca-6989-4cae-9a05-eff7745cc6b1';
+const orderId = '';
 
 const paymentDraft = {
-  key:"payment" + Math.random().toString(36).substr(2, 5),
-  amountPlanned:{
-    currencyCode: 'EUR',
-    centAmount: 5000
-  }
-}
+    key: 'payment' + Math.random().toString(36).substr(2, 5),
+    amountPlanned: {
+        currencyCode: 'EUR',
+        centAmount: 5000,
+    },
+};
 
 // create a cart and update the catId variable
 // checkout.createCart(customerKey).then(log).catch(log);
@@ -19,7 +19,7 @@ const paymentDraft = {
 // checkout.addLineItemsToCart(cartId,['tulip-seed-box','tulip-seed-sack']).then(log).catch(log);
 
 // checkout.addDiscountCodeToCart(cartId, "SUMMER22").then(log).catch(log);
-checkout.getCartById(cartId).then(log).catch(log);
+// checkout.getCartById(cartId).then(log).catch(log);
 
 // create order from cart and update the orderId
 // checkout.createOrderFromCart(cartId).then(log).catch(log);
@@ -31,26 +31,26 @@ checkout.getCartById(cartId).then(log).catch(log);
 // checkout.updateOrderCustomState(orderId,"ff-order-packed").then(log).catch(log);
 
 const checkoutProcess = async () => {
-  let emptyCart = await checkout.createCart(customerKey);
+    let emptyCart = await checkout.createCart(customerKey);
 
-  let filledCart = await checkout.addLineItemsToCart(
-    emptyCart.body.id,['tulip-seed-box','tulip-seed-sack']
-  );
-  filledCart = await checkout.addDiscountCodeToCart(
-    emptyCart.body.id, 'SUMMER'
-  );
+    let filledCart = await checkout.addLineItemsToCart(
+        emptyCart.body.id, ['tulip-seed-box', 'tulip-seed-sack'],
+    );
+    filledCart = await checkout.addDiscountCodeToCart(
+        filledCart.body.id, 'SUMMER22',
+    );
 
-  let order = await checkout.createOrderFromCart(filledCart.body.id);
-  const payment = await checkout.createPayment(paymentDraft);
-  order = await checkout.addPaymentToOrder(order.body.id, payment.body.id);
-  order = await checkout.setOrderState(order.body.id, 'Confirmed');
-  order = await checkout.updateOrderCustomState(order.body.id,'ff-order-packed');
-  if (order) {
-    return {
-      status: 201,
-      message: "order created: " + order.body.id,
-    };
-  }
+    let order = await checkout.createOrderFromCart(filledCart.body.id);
+    const payment = await checkout.createPayment(paymentDraft);
+    order = await checkout.addPaymentToOrder(order.body.id, payment.body.id);
+    order = await checkout.setOrderState(order.body.id, 'Confirmed');
+    order = await checkout.updateOrderCustomState(order.body.id,'jm-order-packed3');
+    if (order) {
+        return {
+            status: 201,
+            message: 'order created: ' + order.body.id,
+        };
+    }
 };
 
-// checkoutProcess().then(log).catch(log);
+checkoutProcess().then(log).catch(log);

@@ -1,13 +1,19 @@
 const { apiRoot, projectKey } = require("./client.js");
 const { getCustomerByKey } = require( "./customer.js" );
 
-module.exports.createCart = (customerKey) => getCustomerByKey(customerKey).then(customer => apiRoot.carts().post({
-    body: {
-        currency: "EUR",
-        customerId: customer.body.id,
-        country: "DE" // <- this also creates a shipping address... \o/
-    }
-}).execute())
+module.exports.createCart = (customerKey) => getCustomerByKey(customerKey).then(customer => {
+    const shippingAddress = customer.body.addresses.find(a => a.id = customer.body.shippingAddressIds[0]);
+    return apiRoot.carts().post({
+        body: {
+            currency: "EUR",
+            customerId: customer.body.id,
+            country: shippingAddress.country,
+            shippingAddress: {
+                country: shippingAddress.country,
+            },
+        }
+    }).execute();
+});
 
 module.exports.createAnonymousCart = () =>
   apiRoot
@@ -60,12 +66,42 @@ const createOrderFromCartDraft = (cartId) => {
   });
 };
 
-module.exports.getOrderById = (ID) => {}
+module.exports.getOrderById = (ID) => apiRoot.orders().withId({ID}).get().execute();
 
-module.exports.updateOrderCustomState = (orderId, customStateKey) => {}
+module.exports.updateOrderCustomState = (orderId, customStateKey) => this.getOrderById(orderId).then(order => apiRoot.orders().withId({ID: orderId}).post({
+    body: {
+        version: order.body.version,
+        actions: [{
+            action: "transitionState",
+            state: {
+                key: customStateKey
+            },
+        }],
+    },
+}).execute());
 
-module.exports.createPayment = (paymentDraft) => {}
+module.exports.createPayment = (paymentDraft) => apiRoot.payments().post({
+    body: paymentDraft,
+}).execute();
 
-module.exports.setOrderState = (orderId, stateName) => {}
+module.exports.setOrderState = (orderId, stateName) => this.getOrderById(orderId).then(order => apiRoot.orders().withId({ID: orderId}).post({
+    body: {
+        version: order.body.version,
+        actions: [{
+            action: "changeOrderState",
+            orderState: stateName,
+        }],
+    },
+}).execute())
 
-module.exports.addPaymentToOrder = (orderId, paymentId) => {}
+module.exports.addPaymentToOrder = (orderId, paymentId) => this.getOrderById(orderId).then(order => apiRoot.orders().withId({ID: orderId}).post({
+    body: {
+        version: order.body.version,
+        actions: [{
+            action: "addPayment",
+            payment: {
+                id: paymentId,
+            },
+        }],
+    },
+}).execute())
