@@ -60,16 +60,12 @@ const getImportClient = () => {
 };
 
 const getStoreClient = () => {
-  const authMiddleWare = createAuthForPasswordFlow({
+  const authMiddleWare = createAuthForClientCredentialsFlow({
     host: process.env.CTP_STORE_AUTH_URL,
     projectKey,
     credentials: {
       clientId: process.env.CTP_STORE_CLIENT_ID,
       clientSecret: process.env.CTP_STORE_CLIENT_SECRET,
-      user: {
-        username: "jmeeus@reference.com",
-        password: "password",
-      }
     },
     fetch
   });
@@ -87,18 +83,22 @@ const getStoreClient = () => {
 const getMLClient = () => {};
 
 const getMyAPIClient = () => {
-  const authMiddleWare = createAuthForClientCredentialsFlow({
-    host: process.env.CTP_MY_STORE_AUTH_URL,
+  const authMiddleWare = createAuthForPasswordFlow({
+    host: process.env.CTP_MY_AUTH_URL,
     projectKey,
     credentials: {
-      clientId: process.env.CTP_MY_STORE_CLIENT_ID,
-      clientSecret: process.env.CTP_MY_STORE_CLIENT_SECRET
+      clientId: process.env.CTP_MY_CLIENT_ID,
+      clientSecret: process.env.CTP_MY_CLIENT_SECRET,
+      user: {
+        username: "jmeeus@reference.com",
+        password: "password",
+      }
     },
     fetch
   });
 
   const httpMiddleWare = createHttpClient({
-    host: process.env.CTP_MY_STORE_API_URL,
+    host: process.env.CTP_MY_API_URL,
     fetch,
   })
 
